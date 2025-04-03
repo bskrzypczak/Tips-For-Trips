@@ -1,0 +1,18 @@
+.search-results {
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.search-results h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.search-details p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.search-details strong {
+    color: #333;
+}

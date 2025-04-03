@@ -1,0 +1,103 @@
+.positions-container{
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+}
+
+
+.positions-title{
+    color: #f5f5f5;
+    font-size: 38px;
+    font-weight: lighter;
+    font-family: 'Roboto', sans-serif;
+    margin-left: 8vw;
+}
+
+.positions-list{
+    margin-left: 8vw;
+    margin-right: 8vw;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.position-tile {
+    position: relative;
+    width: 25vw;
+    height: 17vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .position-tile:hover {
+    transform: scale(1.05); /* Powiększenie na hover */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+  
+  .act-tile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Dopasowanie obrazka do kafelka */
+    display: block;
+  }
+  
+  
+  .act-tile-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5); /* Półprzezroczyste tło */
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: lighter;
+    text-align: center;
+    padding: 10px;
+  }
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.page-button {
+    width: 40px; /* Stała szerokość */
+    height: 40px; /* Stała wysokość */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Usuń dodatkowe odstępy wewnętrzne */
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #333333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.page-button:hover {
+    background-color: #555555;
+}
+
+.page-button.active {
+    background-color: #883f04; /* Kolor aktywnej strony */
+    color: #ffffff;
+}
+
+.page-button[disabled] {
+    cursor: default;
+    background-color: transparent;
+    color: #888888;
+}
