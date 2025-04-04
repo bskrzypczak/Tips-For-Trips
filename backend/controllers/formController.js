@@ -1,5 +1,6 @@
 const Form = require('../models/formModel');
 const Activity = require('../models/activityModel');
+const City = require('../models/cityModel')
 
 const cosineSimilarity = (vecA, vecB) => {
     let dot = 0;
@@ -126,12 +127,20 @@ const mapAnswersToForm = (answers) => {
 
 const matchAttractions = async (req, res) => {
     try {
-        const answers = req.body; // Oczekujemy tablicy odpowiedzi
+        const { miasto, answers} = req.body; // Oczekujemy tablicy odpowiedzi
+        console.log("Miasto z żądania:", miasto);
 
+        if (!miasto) {
+            return res.status(400).json({ message: 'Brak parametru miasto w żądaniu' });
+        }
+
+        const id_miasta = await City.findOne({
+            nazwa: { $regex: new RegExp('^' + miasto + '$', 'i') } // Dopasowanie do nazwy miasta (case-insensitive)
+        }).then(city => city.id);
         // Mapowanie odpowiedzi na strukturę oczekiwaną przez getUserVector
         const formAnswers = mapAnswersToForm(answers);
 
-        const activities = await Activity.find({}, { _id: 0 });
+        const activities = await Activity.find({ id_miasta: id_miasta }, { _id: 0 });
         const userVec = getUserVector(formAnswers);
 
         const matched = activities

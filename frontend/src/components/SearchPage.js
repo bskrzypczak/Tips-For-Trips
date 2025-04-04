@@ -12,6 +12,7 @@ function SearchPage() {
     const rawAnswers = queryParams.get('answers');
 
     const [matchedAttractionIds, setMatchedAttractionIds] = React.useState([]);
+    const requestSentRef = React.useRef(false); // Ref do śledzenia, czy żądanie zostało wysłane
 
     const fetchMatchedActivities = async (payload) => {
         try {
@@ -41,14 +42,31 @@ function SearchPage() {
     }
 
     React.useEffect(() => {
+        // Jeśli żądanie już zostało wysłane, nie wysyłaj go ponownie
+        if (requestSentRef.current) {
+            return;
+        }
+        
         const fetchData = async () => {
-            console.log('Payload wysyłany do backendu:', answers); // Loguj dane przed wysłaniem
-            const matchedActivities = await fetchMatchedActivities(answers);
-            console.log('Dopasowane aktywności (IDs):', matchedActivities);
-            setMatchedAttractionIds(matchedActivities.map(activity => activity.id_atrakcji));
+            if (!city) {
+                console.error('City is undefined or null');
+                return;
+            }
+            
+            const payload = { miasto: city, answers };
+            console.log('Sending payload:', payload);
+            
+            const matchedActivities = await fetchMatchedActivities(payload);
+            if (matchedActivities) {
+                setMatchedAttractionIds(matchedActivities.map(activity => activity.id_atrakcji));
+            }
+            
+            // Oznacz, że żądanie zostało wysłane
+            requestSentRef.current = true;
         };
+        
         fetchData();
-    }, []);
+    }, [city, answers]); // Zależności pozostają takie same
 
     return (
         <div className="search-results">
