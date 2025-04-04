@@ -36,15 +36,15 @@ function CitiesTab() {
         fetchCities();
     }, []);
 
+	// Obliczanie indeksów dla aktualnej strony
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = cities.slice(indexOfFirstItem, indexOfLastItem);
 
     // Filtrowanie miast na podstawie wybranych krajów
     const filteredCities = selectedCountries.length > 0
         ? cities.filter((city) => selectedCountries.includes(city.kraj))
         : cities;
-
-    const currentItems = filteredCities.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);

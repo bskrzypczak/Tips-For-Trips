@@ -83,9 +83,9 @@ function HomeTab({ startDate, endDate, setDateRange }) {
             text: 'Jakie masz podejście do płatnych atrakcji?',
             type: 'single-choice',
             options: [
-                { text: 'Chętnie zapłacę za atrakcyjne miejsca', code: 'YES'},
+                { text: 'Chętnie zapłacę za atrakcyjne miejsca', code: 'Yes'},
                 { text: 'Tylko, jeśli jest ona warta swojej ceny', code: 'Maybe'},
-                { text: 'Interesują mnie tylko darmowe atrakcje', code: 'NO'}      
+                { text: 'Interesują mnie tylko darmowe atrakcje', code: 'No'}      
             ]
         },
         {
@@ -188,6 +188,8 @@ function HomeTab({ startDate, endDate, setDateRange }) {
             }
             return answer; // Zwróć odpowiedź dla innych typów pytań
         });
+    
+        console.log('Serialized answers:', serializedAnswers); // Loguj dane przed wysłaniem
     
         // Przekierowanie do strony wyszukiwania z odpowiedziami w formacie JSON
         navigate(
