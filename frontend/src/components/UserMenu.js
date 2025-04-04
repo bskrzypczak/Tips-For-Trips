@@ -9,7 +9,6 @@ export function SignInButton() {
   const handleClick = async () => {
     const userData = await signInWithGoogle(auth, provider);
     signIn(userData);
-    console.log("Zalogowano użytkownika:", userData.displayName);
   };
 
   return (
