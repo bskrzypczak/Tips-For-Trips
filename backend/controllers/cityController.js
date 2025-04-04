@@ -4,7 +4,7 @@ const City = require('../models/cityModel')
 const getCities = async (req, res) => {
     try {
         console.log("Pobieranie miast z bazy...");
-        const cities = await City.find({}, { _id: 0 });
+        const cities = await City.find({}, { _id: 0 }).sort({ id: 1 });
         console.log("Miasta pobrane:", cities);
 
         if (cities.length === 0) {

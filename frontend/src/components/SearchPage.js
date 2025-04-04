@@ -9,7 +9,15 @@ function SearchPage() {
     const city = queryParams.get('city');
     const startDate = queryParams.get('startDate');
     const endDate = queryParams.get('endDate');
-    const preferences = queryParams.get('preferences')?.split(',') || []; // Rozdziel preferencje na tablicę
+    const rawAnswers = queryParams.get('answers');
+
+
+    let answers = [];
+    try {
+        answers = JSON.parse(decodeURIComponent(rawAnswers)); // Parsuj odpowiedzi z JSON
+    } catch (error) {
+        console.error('Błąd parsowania odpowiedzi:', error);
+    }
 
     return (
         <div className="search-results">
@@ -18,9 +26,9 @@ function SearchPage() {
                 <p><strong>Miasto:</strong> {city}</p>
                 <p><strong>Data rozpoczęcia:</strong> {new Date(startDate).toLocaleDateString()}</p>
                 <p><strong>Data zakończenia:</strong> {new Date(endDate).toLocaleDateString()}</p>
-                <p><strong>Preferencje:</strong> {preferences.length > 0 ? preferences.join(', ') : 'Brak'}</p>
+                <h2>Odpowiedzi (JSON):</h2>
+                <pre>{JSON.stringify(answers, null, 2)}</pre> {/* Wyświetl JSON w formacie czytelnym */}
             </div>
-            {/* Możesz dodać tutaj wyniki wyszukiwania na podstawie tych danych */}
         </div>
     );
 }

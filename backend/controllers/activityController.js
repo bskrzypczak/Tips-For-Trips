@@ -4,7 +4,7 @@ const City = require('../models/cityModel')
 const getActivities = async (req, res) => {
     try {
         console.log("Pobieranie atrakcji z bazy...");
-        const activities = await Activity.find({}, { _id: 0 });
+        const activities = await Activity.find({}, { _id: 0 }).sort({ id_atrakcji: 1 });
   
         if (activities.length === 0) {
             console.log("Brak atrakcji w bazie danych");

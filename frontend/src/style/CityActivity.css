@@ -1,7 +1,7 @@
 .positions-container{
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    min-height: 80vh;
 }
 
 
@@ -10,6 +10,7 @@
     font-size: 38px;
     font-weight: lighter;
     font-family: 'Roboto', sans-serif;
+    margin-top: 0px;
     margin-left: 8vw;
 }
 
@@ -100,4 +101,54 @@
     cursor: default;
     background-color: transparent;
     color: #888888;
+}
+
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-right: 14vw;
+    position: relative; /* Ustawienie pozycji dla rozwijanej listy */
+}
+
+.filter-section button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.filter-section button:hover {
+    background-color: #e0e0e0;
+}
+
+.filter-dropdown {
+    position: absolute;
+    top: 100%; /* Umieszcza listę poniżej przycisku */
+    right: 2.5vw; /* Wyrównanie do prawej strony */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    max-height: 150px; /* Maksymalna wysokość listy */
+    overflow-y: auto; /* Przewijanie w pionie */
+    z-index: 1000; /* Zapewnia widoczność nad innymi elementami */
+}
+
+.filter-checkbox {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.filter-checkbox input {
+    margin-right: 8px;
 }

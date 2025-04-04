@@ -18,7 +18,9 @@ function App() {
     return (
         <div className="app">
             <header className="app-header">
-                <img src="/logo.png" alt="Logo" className="app-logo" />
+                <Link to="/">
+                    <img src="/logo.png" alt="Logo" className="app-logo" />
+                </Link>
                 <nav className="app-nav">
                     <Link to="/">Strona główna</Link>
                     <Link to="/cities">Miasta</Link>

@@ -5,6 +5,8 @@ function CitiesTab() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1); // Stan dla aktualnej strony
+    const [selectedCountries, setSelectedCountries] = useState(''); // Stan dla wybranego kraju
+    const [isFilterVisible, setIsFilterVisible] = useState(false); // Stan widoczności listy krajów
     const itemsPerPage = 6; // Liczba kafelków na stronę
 
     // Funkcja do pobierania miast
@@ -34,18 +36,33 @@ function CitiesTab() {
         fetchCities();
     }, []);
 
-    // Obliczanie indeksów dla aktualnej strony
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = cities.slice(indexOfFirstItem, indexOfLastItem); // Wyświetlane kafelki
 
-    // Funkcja do zmiany strony
+    // Filtrowanie miast na podstawie wybranych krajów
+    const filteredCities = selectedCountries.length > 0
+        ? cities.filter((city) => selectedCountries.includes(city.kraj))
+        : cities;
+
+    const currentItems = filteredCities.slice(indexOfFirstItem, indexOfLastItem);
+
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    // Generowanie dynamicznej paginacji
-    const totalPages = Math.ceil(cities.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredCities.length / itemsPerPage);
+
+    const uniqueCountries = [...new Set(cities.map((city) => city.kraj))];
+
+    const handleCountryChange = (e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setSelectedCountries((prev) => [...prev, value]);
+        } else {
+            setSelectedCountries((prev) => prev.filter((country) => country !== value));
+        }
+        setCurrentPage(1); // Resetuj stronę do pierwszej po zmianie filtra
+    };
 
     const getPagination = () => {
         const pagination = [];
@@ -83,6 +100,32 @@ function CitiesTab() {
         <div className="positions-container">
             {loading && <p className="loading">Ładowanie...</p>}
             {error && <p className="error">{error}</p>}
+
+            {/* Sekcja filtrowania */}
+            <div className="filter-section">
+                <button onClick={() => setIsFilterVisible(!isFilterVisible)}>
+                    Filtruj
+                </button>
+                <button onClick={() => setSelectedCountries([])}>
+                    Wyczyść filtry
+                </button>
+                {isFilterVisible && (
+                    <div className="filter-dropdown">
+                        {uniqueCountries.map((country, index) => (
+                            <label key={index} className="filter-checkbox">
+                                <input
+                                    type="checkbox"
+                                    value={country}
+                                    checked={selectedCountries.includes(country)}
+                                    onChange={handleCountryChange}
+                                />
+                                {country}
+                            </label>
+                        ))}
+                    </div>
+                )}
+            </div>
+
             {currentItems.length > 0 && (
                 <section className="positions-section">
                     <h1 className="positions-title">Popularne kierunki</h1>
@@ -102,7 +145,7 @@ function CitiesTab() {
                     </div>
                 </section>
             )}
-            {/* Nawigacja paginacji */}
+
             {totalPages > 1 && (
                 <div className="pagination">
                     {pagination.map((item, index) => (

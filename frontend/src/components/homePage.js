@@ -7,11 +7,148 @@ function HomeTab({ startDate, endDate, setDateRange }) {
     const [city, setCity] = useState(''); // Stan dla pola tekstowego
     const [suggestions, setSuggestions] = useState([]); // Stan dla sugestii
     const [isModalOpen, setIsModalOpen] = useState(false); // Stan widoczności modala
-    const [preferences, setPreferences] = useState([]); // Stan dla preferencji użytkownika
+    const [answers, setAnswers] = useState(Array(12).fill(null)); // Stan dla odpowiedzi użytkownika
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const navigate = useNavigate(); // Hook do nawigacji (React Router)
 
     // Lista miast (może być pobierana z API)
     const cities = ['Barcelona', 'Paryż', 'Rzym', 'Warszawa', 'Berlin', 'Londyn', 'Nowy Jork'];
+
+    const questions = [
+        {
+            text: 'Czy chcesz, aby atrakcje były dostosowane do dzieci?',
+            type: 'single-choice',
+            options: [
+                { text: 'Tak, planuję podróż z dziećmi', code: 'Yes'},
+                { text: 'Interesują mnie atrakcje, które mogą zaciekawić zarówno dla dorosłych, jak i dzieci', code: 'Maybe'},
+                { text: 'Nie zależy mi na atrakcjach dla dzieci', code: 'No'}
+            ]
+        },
+        {
+            text: 'Jak bardzo interesuje Cię sztuka?',
+            type: 'single-choice',
+            options: [
+                { text: 'Uwielbiam odwiedzać galerie i wystawy sztuki', code: 'Yes'},
+                { text: 'Lubię od czasu do czasu odwiedzić galerię lub wystawę', code: 'Maybe'},
+                { text: 'Sztuka mnie nie interesuje', code: 'No'} 
+            ]
+        },
+        {
+            text: 'Jak ważne są dla Ciebie zabytki i historyczne miejsca?',
+            type: 'single-choice',
+            options: [
+                { text: 'Tak, zabytki są najważniejsze', code: 'Yes'},
+                { text: 'Lubię zabytki, ale nie muszą być głównym celem mojej podróży', code: 'Maybe'},
+                { text: 'Nie interesują mnie zabytki', code: 'No'}   
+            ]
+        },
+        {
+            text: 'Jaki tryb zwiedzania wolisz?',
+            type: 'single-choice',
+            options: [
+                { text: 'Chcę zobaczyć jak najwięcej, w jak najkrótszym czasie', code: 'Short'},
+                { text: 'Mogę poświęcić więcej czasu na niektóre atrakcje', code: 'Medium'},
+                { text: 'Chcę dokładnie poznać każde odwiedzane miejsce', code: 'Long'}    
+            ]
+        },
+        {
+            text: 'Jak wolisz spędzać czas podczas podróży?',
+            type: 'slider',
+            options: ['Relaks, spokojne zwiedzanie i odpoczynek', 'Obojętnie', 'Aktywne zwiedzanie i przygody na świeżym powietrzu'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'Gdzie wolisz spędzać czas podczas podróży?',
+            type: 'slider',
+            options: ['Centrum miasta', 'Obojętnie', 'wśród przyrody'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'Kiedy preferujesz zwiedzać atrakcje?',
+            type: 'slider',
+            options: ['Za dnia, przy pełnym świetle', 'Obojętnie', 'W nocy, z podświetlonymi atrakcjami'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'W jakich miejscach lepiej się czujesz?',
+            type: 'slider',
+            options: ['Zatłoczone, popularne miejsca pełne turystów', 'Obojętnie', 'Spokojne, mniej turystyczne miejsca'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'Jakie masz podejście do płatnych atrakcji?',
+            type: 'single-choice',
+            options: [
+                { text: 'Chętnie zapłacę za atrakcyjne miejsca', code: 'YES'},
+                { text: 'Tylko, jeśli jest ona warta swojej ceny', code: 'Maybe'},
+                { text: 'Interesują mnie tylko darmowe atrakcje', code: 'NO'}      
+            ]
+        },
+        {
+            text: 'Czy lubisz poczuć adrenalinę?',
+            type: 'slider',
+            options: ['Uwielbiam ekstremalne atrakcje', 'Obojętnie', 'Preferuję spokojniejsze atrakcje'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'O ktorej chcesz zaczynac zwiedzanie?',
+            type: 'slider',
+            options: ['7:00 ', '9:30', '12:00'],
+            min: 0,
+            max: 10
+        },
+        {
+            text: 'Które miejsca uważasz za ciekawe?',
+            type: 'multiple-choice',
+            options: [
+                { text: 'Obiekty sportowe (stadiony, hale sportowe)', code: 'Sport' },
+                { text: 'Kościoły, synagogi, meczety, świątynie', code: 'Religia' },
+                { text: 'Galerie handlowe i pasaże', code: 'Zakupy' },
+                { text: 'Ogrody zoologiczne, akwaria', code: 'Zwierzeta' },
+                { text: 'Miejsca historyczne (zamki, twierdze)', code: 'Historia' },
+                { text: 'Targi i lokalne rynki', code: 'Targi' },
+                { text: 'Punkty widokowe', code: 'Widoki' },
+                { text: 'Baseny i plaże', code: 'Woda' }]
+        },
+        
+
+    ]; // Lista pytań
+
+    const handlePreviousQuestion = () => {
+        setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0)); // Przejdź do poprzedniego pytania
+    };
+
+    const handleNextQuestion = () => {
+        setCurrentQuestionIndex((prevIndex) => Math.min(prevIndex + 1, questions.length - 1)); // Przejdź do następnego pytania
+    };
+
+    const handleAnswer = (answerCode) => {
+        setAnswers((prevAnswers) => {
+            const updatedAnswers = [...prevAnswers];
+            updatedAnswers[currentQuestionIndex] = answerCode; // Zapisz odpowiedź dla aktualnego pytania
+            return updatedAnswers;
+        });
+    };
+
+    const handleMultipleAnswer = (optionCode) => {
+        setAnswers((prevAnswers) => {
+            const updatedAnswers = [...prevAnswers];
+            const currentAnswers = updatedAnswers[currentQuestionIndex] || [];
+            if (currentAnswers.includes(optionCode)) {
+                // Usuń kod, jeśli już jest zaznaczony
+                updatedAnswers[currentQuestionIndex] = currentAnswers.filter((code) => code !== optionCode);
+            } else {
+                // Dodaj kod, jeśli nie jest zaznaczony
+                updatedAnswers[currentQuestionIndex] = [...currentAnswers, optionCode];
+            }
+            return updatedAnswers;
+        });
+    };
 
     const handleCityChange = (e) => {
         const value = e.target.value;
@@ -43,19 +180,23 @@ function HomeTab({ startDate, endDate, setDateRange }) {
 
     const handleModalSubmit = () => {
         setIsModalOpen(false); // Zamknij modal
-        navigate(`/search?city=${city}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}&preferences=${preferences.join(',')}`);
+    
+        // Serializuj odpowiedzi jako JSON
+        const serializedAnswers = answers.map((answer) => {
+            if (Array.isArray(answer)) {
+                return answer; // Zwróć tablicę dla pytań typu multiple-choice
+            }
+            return answer; // Zwróć odpowiedź dla innych typów pytań
+        });
+    
+        // Przekierowanie do strony wyszukiwania z odpowiedziami w formacie JSON
+        navigate(
+            `/search?city=${city}&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}&answers=${encodeURIComponent(JSON.stringify(serializedAnswers))}`
+        );
     };
 
     const handleModalClose = () => {
         setIsModalOpen(false); // Zamknij modal bez przekierowania
-    };
-
-    const togglePreference = (preference) => {
-        setPreferences((prev) =>
-            prev.includes(preference)
-                ? prev.filter((item) => item !== preference) // Usuń, jeśli już istnieje
-                : [...prev, preference] // Dodaj, jeśli nie istnieje
-        );
     };
 
     return (
@@ -105,35 +246,76 @@ function HomeTab({ startDate, endDate, setDateRange }) {
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal">
-                        <h2>Dodatkowe pytania</h2>
-                        <p>Wybierz swoje preferencje:</p>
+                        <h2>Pytanie {currentQuestionIndex + 1} z {questions.length}</h2>
+                        <div className="progress-bar">
+                            <div
+                                className="progress-bar-fill"
+                                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                            ></div>
+                        </div>
+                        <p className='modal-question'>{questions[currentQuestionIndex].text}</p>
                         <div className="modal-options">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    onChange={() => togglePreference('Historia')}
-                                />
-                                Historia
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    onChange={() => togglePreference('Kulinaria')}
-                                />
-                                Kulinaria
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    onChange={() => togglePreference('Aktywny wypoczynek')}
-                                />
-                                Aktywny wypoczynek
-                            </label>
+                            {questions[currentQuestionIndex].type === 'single-choice' && (
+                                questions[currentQuestionIndex].options.map((option, index) => (
+                                    <label key={index} className="option-label">
+                                        <input
+                                            type="radio"
+                                            name={`question-${currentQuestionIndex}`} // Grupa radiobuttonów dla jednego pytania
+                                            value={option.code}
+                                            checked={answers[currentQuestionIndex] === option.code} // Sprawdź, czy opcja jest zaznaczona
+                                            onChange={() => handleAnswer(option.code)} // Obsługa zmiany
+                                        />
+                                        {option.text}
+                                    </label>
+                                ))
+                            )}
+                            {questions[currentQuestionIndex].type === 'slider' && (
+                                <div className="slider-container">
+                                    <input
+                                        type="range"
+                                        min={questions[currentQuestionIndex].min}
+                                        max={questions[currentQuestionIndex].max}
+                                        value={answers[currentQuestionIndex] || questions[currentQuestionIndex].min}
+                                        onChange={(e) => handleAnswer(e.target.value)}
+                                    />
+                                    <div className="slider-labels">
+                                        <span>{questions[currentQuestionIndex].options[0]}</span>
+                                        <span>{questions[currentQuestionIndex].options[1]}</span>
+                                        <span>{questions[currentQuestionIndex].options[2]}</span>
+                                    </div>
+                                </div>
+                            )}
+                            {questions[currentQuestionIndex].type === 'multiple-choice' && (
+                                questions[currentQuestionIndex].options.map((option, index) => (
+                                    <label key={index} className="option-label">
+                                        <input
+                                            type="checkbox"
+                                            value={option.code}
+                                            checked={answers[currentQuestionIndex]?.includes(option.code)} // Sprawdź, czy opcja jest zaznaczona
+                                            onChange={() => handleMultipleAnswer(option.code)} // Obsługa zmiany
+                                        />
+                                        {option.text}
+                                    </label>
+                                ))
+                            )}
                         </div>
                         <div className="modal-actions">
-                            <button onClick={handleModalSubmit}>Zatwierdź</button>
-                            <button onClick={handleModalClose}>Anuluj</button>
+                            {currentQuestionIndex > 0 && (
+                                <button className = "poprzednie" onClick={handlePreviousQuestion}>
+                                    Poprzednie
+                                </button>
+                            )}
+                            {currentQuestionIndex < questions.length - 1 ? (
+                                <button className = "nastepne" onClick={handleNextQuestion}>
+                                    Następne
+                                </button>
+                            ) : (
+                                <button onClick={handleModalSubmit}>
+                                    Zatwierdź
+                                </button>
+                            )}
                         </div>
+                        <button className = "modal-back" onClick={handleModalClose}>Zamknij</button>
                     </div>
                 </div>
             )}

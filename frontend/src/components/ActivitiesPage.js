@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 function ActivitiesTab() {
-	const [activities, setaActivities] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-	const [currentPage, setCurrentPage] = useState(1); // Stan dla aktualnej strony
-	const itemsPerPage = 6; // Liczba kafelków na stronę
+    const [activities, setActivities] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1); // Stan dla aktualnej strony
+    const [selectedServices, setSelectedServices] = useState([]); // Stan dla wybranych usług
+    const [isFilterVisible, setIsFilterVisible] = useState(false); // Stan widoczności listy usług
+    const itemsPerPage = 6; // Liczba kafelków na stronę
 
 	// Funkcja do pobierania miast
 	const fetchActivities = async () => {
@@ -17,7 +19,7 @@ function ActivitiesTab() {
 			}
 			const data = await response.json();
 			if (Array.isArray(data)) {
-				setaActivities(data);
+				setActivities(data);
 			} else {
 				throw new Error('Nieprawidłowy format danych z backendu - oczekiwano tablicy');
 			}
@@ -34,10 +36,18 @@ function ActivitiesTab() {
 		fetchActivities();
 	}, []); // Pusta tablica zależności oznacza, że efekt wykona się tylko raz, przy montowaniu komponentu
 
-	// Obliczanie indeksów dla aktualnej strony
+    // Obliczanie indeksów dla aktualnej strony
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = activities.slice(indexOfFirstItem, indexOfLastItem); // Wyświetlane kafelki
+
+    // Filtrowanie aktywności na podstawie wybranych usług
+    const filteredActivities = selectedServices.length > 0
+        ? activities.filter((activity) =>
+              selectedServices.every((service) => activity.uslugi.includes(service))
+          )
+        : activities;
+
+    const currentItems = filteredActivities.slice(indexOfFirstItem, indexOfLastItem); // Wyświetlane kafelki
 
     // Funkcja do zmiany strony
     const handlePageChange = (pageNumber) => {
@@ -45,7 +55,20 @@ function ActivitiesTab() {
     };
 
     // Generowanie dynamicznej paginacji
-    const totalPages = Math.ceil(activities.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+
+    // Pobranie unikalnych usług z aktywności
+    const uniqueServices = [...new Set(activities.flatMap((activity) => activity.uslugi))];
+
+    const handleServiceChange = (e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setSelectedServices((prev) => [...prev, value]);
+        } else {
+            setSelectedServices((prev) => prev.filter((service) => service !== value));
+        }
+        setCurrentPage(1); // Resetuj stronę do pierwszej po zmianie filtra
+    };
 
     const getPagination = () => {
         const pagination = [];
@@ -84,25 +107,49 @@ function ActivitiesTab() {
 		<div className="positions-container">
 			{loading && <p className="loading">Ładowanie...</p>}
 			{error && <p className="error">{error}</p>}
+			<div className="filter-section">
+                <button onClick={() => setIsFilterVisible(!isFilterVisible)}>
+                    Filtruj
+                </button>
+                <button onClick={() => setSelectedServices([])}>
+                    Wyczyść filtry
+                </button>
+                {isFilterVisible && (
+                    <div className="filter-dropdown">
+                        {uniqueServices.map((service, index) => (
+                            <label key={index} className="filter-checkbox">
+                                <input
+                                    type="checkbox"
+                                    value={service}
+                                    checked={selectedServices.includes(service)}
+                                    onChange={handleServiceChange}
+                                />
+                                {service}
+                            </label>
+                        ))}
+                    </div>
+                )}
+            </div>
+
 			{currentItems.length > 0 && (
-				<section className="positions-section">
-					<h1 className="positions-title">Popularne atrakcje</h1>
-					<div className="positions-list">
-						{currentItems.map((activity, index) => (
-								<div key={index} className="position-tile">
-									<img
-										src={`/activities/${activity.id_atrakcji}.jpg`}
-										alt={`${activity.nazwa_atrakcji}`}
-										className="act-tile-image"
-									/>
-									<div className="act-tile-text">
-										{activity.nazwa_atrakcji}
-									</div>
-								</div>
-							))}
-					</div>
-				</section>
-			)}
+                <section className="positions-section">
+                    <h1 className="positions-title">Popularne atrakcje</h1>
+                    <div className="positions-list">
+                        {currentItems.map((activity, index) => (
+                            <div key={index} className="position-tile">
+                                <img
+                                    src={`/activities/${activity.id_atrakcji}.jpg`}
+                                    alt={`${activity.nazwa_atrakcji}`}
+                                    className="act-tile-image"
+                                />
+                                <div className="act-tile-text">
+                                    {activity.nazwa_atrakcji}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 			{/* Nawigacja paginacji */}
 			{totalPages > 1 && (
                 <div className="pagination">
@@ -123,3 +170,5 @@ function ActivitiesTab() {
 }
 
 export default ActivitiesTab;
+
+
