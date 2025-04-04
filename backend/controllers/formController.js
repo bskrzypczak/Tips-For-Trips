@@ -127,20 +127,16 @@ const mapAnswersToForm = (answers) => {
 const matchAttractions = async (req, res) => {
     try {
         const answers = req.body; // Oczekujemy tablicy odpowiedzi
-        console.log("Otrzymane odpowiedzi:", answers);
 
         // Mapowanie odpowiedzi na strukturę oczekiwaną przez getUserVector
         const formAnswers = mapAnswersToForm(answers);
-        console.log("Zmapowane odpowiedzi:", formAnswers);
 
         const activities = await Activity.find({}, { _id: 0 });
         const userVec = getUserVector(formAnswers);
-        console.log("User vector:", userVec);
 
         const matched = activities
             .map(activity => {
                 const activityVec = getActivityVector(activity);
-                console.log("Activity vector:", activityVec);
                 const similarity = cosineSimilarity(userVec, activityVec);
                 return { ...activity.toObject(), score: similarity };
             })
@@ -152,7 +148,7 @@ const matchAttractions = async (req, res) => {
         const top6 = matched.slice(0, 6).map(activity => ({
             id_atrakcji: activity.id_atrakcji, // Zwracamy tylko id_atrakcji
         }));
-        console.log("Top 6 matched attractions (IDs):", top6);
+        console.log("Top ", top6.length," matched attractions (IDs):", top6);
 
         res.json(top6);
     } catch (error) {

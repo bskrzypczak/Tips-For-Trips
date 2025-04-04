@@ -48,7 +48,7 @@ function SearchPage() {
             setMatchedAttractionIds(matchedActivities.map(activity => activity.id_atrakcji));
         };
         fetchData();
-    }, [answers]);
+    }, []);
 
     return (
         <div className="search-results">

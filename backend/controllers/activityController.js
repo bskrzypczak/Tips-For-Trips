@@ -3,12 +3,13 @@ const City = require('../models/cityModel')
 
 const getActivities = async (req, res) => {
     try {
-        console.log("Pobieranie atrakcji z bazy...");
         const activities = await Activity.find({}, { _id: 0 }).sort({ id_atrakcji: 1 });
   
         if (activities.length === 0) {
             console.log("Brak atrakcji w bazie danych");
         }
+
+        console.log("Pobrano: ", activities.length, "atrakcji z bazy danych");
   
         res.json(activities);
     } catch (err) {
@@ -37,6 +38,8 @@ const getActivitiesInCity = async (req, res) => {
             return res.status(404).json({ message: `Brak atrakcji dla miasta ${cityName}, o id ${cityId}` });
         }
   
+        console.log("Pobrano: ", activities.length, "atrakcji dla miasta: ", cityName);
+
         res.json(activities);
     } catch (err) {
       console.error('Błąd pobierania atrakcji dla miasta:', err);
