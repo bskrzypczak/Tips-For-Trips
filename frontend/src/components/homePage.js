@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom'; // Jeśli używasz React Router
@@ -11,8 +11,18 @@ function HomeTab({ startDate, endDate, setDateRange }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const navigate = useNavigate(); // Hook do nawigacji (React Router)
 
-    // Lista miast (może być pobierana z API)
-    const cities = ['Barcelona', 'Paryż', 'Rzym', 'Warszawa', 'Berlin', 'Londyn', 'Nowy Jork'];
+    // Lista miast pobierrana z bazy danych używana do autouzupełniania
+    const [cities, setCities] = useState([]);
+
+    useEffect(() => {
+        const fetchCities = async () => {
+            const response = await fetch('http://localhost:7777/api/cities');
+            const data = await response.json();
+            const cityNames = data.map(city => city.nazwa);
+            setCities(cityNames);
+        };
+        fetchCities();
+    }, []);
 
     const questions = [
         {
@@ -157,7 +167,7 @@ function HomeTab({ startDate, endDate, setDateRange }) {
         // Filtruj sugestie na podstawie wpisanego tekstu
         if (value.length > 0) {
             const filteredSuggestions = cities.filter((city) =>
-                city.toLowerCase().includes(value.toLowerCase())
+                city.toLowerCase().startsWith(value.toLowerCase())
             );
             setSuggestions(filteredSuggestions);
         } else {
