@@ -154,9 +154,7 @@ const matchAttractions = async (req, res) => {
         matched.sort((a, b) => b.score - a.score);
 
         // Zwróć tylko top 6 atrakcji
-        const top6 = matched.slice(0, 6).map(activity => ({
-            id_atrakcji: activity.id_atrakcji, // Zwracamy tylko id_atrakcji
-        }));
+        const top6 = matched.slice(0, 6);
         console.log("Top ", top6.length," matched attractions (IDs):", top6);
 
         res.json(top6);

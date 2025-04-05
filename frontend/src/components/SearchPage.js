@@ -11,7 +11,7 @@ function SearchPage() {
     const endDate = queryParams.get('endDate');
     const rawAnswers = queryParams.get('answers');
 
-    const [matchedAttractionIds, setMatchedAttractionIds] = React.useState([]);
+    const [matchedActivities, setMatchedActivities] = React.useState([]);
     const requestSentRef = React.useRef(false); // Ref do śledzenia, czy żądanie zostało wysłane
 
     const fetchMatchedActivities = async (payload) => {
@@ -42,7 +42,6 @@ function SearchPage() {
     }
 
     React.useEffect(() => {
-        // Jeśli żądanie już zostało wysłane, nie wysyłaj go ponownie
         if (requestSentRef.current) {
             return;
         }
@@ -57,11 +56,13 @@ function SearchPage() {
             console.log('Sending payload:', payload);
             
             const matchedActivities = await fetchMatchedActivities(payload);
+
+
             if (matchedActivities) {
-                setMatchedAttractionIds(matchedActivities.map(activity => activity.id_atrakcji));
+                setMatchedActivities(matchedActivities); // Ustaw dane w stanie
             }
+
             
-            // Oznacz, że żądanie zostało wysłane
             requestSentRef.current = true;
         };
         
@@ -70,18 +71,23 @@ function SearchPage() {
 
     return (
         <div className="search-results">
-            <h1>Wyniki wyszukiwania</h1>
-            <div className="search-details">
-                <p><strong>Miasto:</strong> {city}</p>
-                <p><strong>Data rozpoczęcia:</strong> {new Date(startDate).toLocaleDateString()}</p>
-                <p><strong>Data zakończenia:</strong> {new Date(endDate).toLocaleDateString()}</p>
-                <h2>Dopasowane atrakcje (IDs):</h2>
-                <ul>
-                    {matchedAttractionIds.map((id, index) => (
-                        <li key={index}>ID atrakcji: {id}</li>
-                    ))}
-                </ul>
-            </div>
+                <section className="positions-section">
+                    <h1 className="positions-title">Proponowane dla Ciebie</h1>
+                    <div className="positions-list">
+                        {matchedActivities.map((activity, index) => (
+                            <div key={index} className="position-tile">
+                                <img
+                                    src={`/activities/${activity.id_atrakcji}.jpg`}
+                                    alt={`${activity.nazwa_atrakcji}`}
+                                    className="act-tile-image"
+                                />
+                                <div className="act-tile-text">
+                                    {activity.nazwa_atrakcji}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
         </div>
     );
 }
