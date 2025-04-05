@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom'; // Jeśli używasz React Router
+import { debounce } from 'lodash';
 
 function HomeTab({ startDate, endDate, setDateRange }) {
     const [city, setCity] = useState(''); // Stan dla pola tekstowego
@@ -10,19 +11,7 @@ function HomeTab({ startDate, endDate, setDateRange }) {
     const [answers, setAnswers] = useState(Array(12).fill(null)); // Stan dla odpowiedzi użytkownika
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const navigate = useNavigate(); // Hook do nawigacji (React Router)
-
-    // Lista miast pobierrana z bazy danych używana do autouzupełniania
-    const [cities, setCities] = useState([]);
-
-    useEffect(() => {
-        const fetchCities = async () => {
-            const response = await fetch('http://localhost:7777/api/cities');
-            const data = await response.json();
-            const cityNames = data.map(city => city.nazwa);
-            setCities(cityNames);
-        };
-        fetchCities();
-    }, []);
+    const searchFieldEmptyRef = React.useRef(false);
 
     const questions = [
         {
@@ -160,18 +149,69 @@ function HomeTab({ startDate, endDate, setDateRange }) {
         });
     };
 
+    
+
     const handleCityChange = (e) => {
         const value = e.target.value;
         setCity(value);
+        
+        // Ustaw flagę, czy pole jest puste
+        searchFieldEmptyRef.current = !value.length;
+        
+        // Czyść sugestie, jeśli pole jest puste
+        if (searchFieldEmptyRef.current) {
+            setSuggestions([]);
+            return;
+        }
+        
+        // Zapytaj bazę danych tylko o miasta zaczynające się od wpisanego tekstu
+        debouncedFetchCities(value);
+    };
 
-        // Filtruj sugestie na podstawie wpisanego tekstu
-        if (value.length > 0) {
-            const filteredSuggestions = cities.filter((city) =>
-                city.toLowerCase().startsWith(value.toLowerCase())
-            );
-            setSuggestions(filteredSuggestions);
-        } else {
-            setSuggestions([]); // Jeśli pole jest puste, usuń sugestie
+    const debouncedFetchCities = React.useCallback(
+        debounce((prefix) => {
+            fetchCitiesByPrefix(prefix);
+        }, 300),
+        []
+    );
+
+    const fetchCitiesByPrefix = async (prefix) => {
+        try {
+            if (searchFieldEmptyRef.current) {
+                return;
+            }
+
+            if (!prefix || typeof prefix !== 'string') {
+                console.error('Nieprawidłowy prefix:', prefix);
+                return;
+            }
+            
+            // Kodowanie URL z obsługą znaków specjalnych
+            const encodedPrefix = encodeURIComponent(prefix.trim());
+            
+            const url = `http://localhost:7777/api/cities/search?prefix=${encodedPrefix}`;
+            
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                console.error('Error response:', response.status, await response.text());
+                throw new Error('Network response was not ok');
+            }
+            
+            const data = await response.json();
+            console.log("Otrzymane sugestie miast:", data);
+            
+            const cityNames = Array.isArray(data) ? data.map(city => 
+                typeof city === 'string' ? city : city.nazwa) : [];
+
+            if (!searchFieldEmptyRef.current) {
+                setSuggestions(cityNames);
+            }
+
+            setSuggestions(cityNames);
+        } catch (error) {
+            console.error("Błąd podczas pobierania sugestii miast:", error);
+            setSuggestions([]);
         }
     };
 
