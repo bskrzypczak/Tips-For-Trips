@@ -74,4 +74,4 @@ npm install
 npm start
 
 # Połączenie z bazą danych!
-W folderze backend, w pliku server.js należy zmienić w 10 i 11 linii zmienne 'login' i 'password' na 'test'. 
+W folderze backend, w pliku server.js należy zmienić w 10 i 11 linii wartości zmiennych 'login' i 'password' na 'test'. 
