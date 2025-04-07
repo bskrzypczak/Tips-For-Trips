@@ -139,10 +139,8 @@ function HomeTab({ startDate, endDate, setDateRange }) {
             const updatedAnswers = [...prevAnswers];
             const currentAnswers = updatedAnswers[currentQuestionIndex] || [];
             if (currentAnswers.includes(optionCode)) {
-                // Usuń kod, jeśli już jest zaznaczony
                 updatedAnswers[currentQuestionIndex] = currentAnswers.filter((code) => code !== optionCode);
             } else {
-                // Dodaj kod, jeśli nie jest zaznaczony
                 updatedAnswers[currentQuestionIndex] = [...currentAnswers, optionCode];
             }
             return updatedAnswers;

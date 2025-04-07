@@ -4,9 +4,12 @@ const path = require('path');
 const cityRoutes = require('./routes/cityRoutes');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const port = 7777;
+const login = process.env.MONGO_LOGIN;
+const password = process.env.MONGO_PASSWORD;
 
 // Middleware do obsługi CORS
 app.use(cors());
@@ -28,7 +31,7 @@ app.listen(port, () => {
 });
 
 
-mongoose.connect('mongodb+srv://bskrzypczak:mfeZPhFvrEjHSgvU@tipsfortrips.luxzdnn.mongodb.net/TipsForTrips?retryWrites=true&w=majority&appName=TipsForTrips')
+mongoose.connect(`mongodb+srv://${login}:${password}@tipsfortrips.luxzdnn.mongodb.net/TipsForTrips?retryWrites=true&w=majority&appName=TipsForTrips`)
 .then(() => console.log("Połączono z bazą danych MongoDB"))
 .catch(err => console.error("Błąd połączenia z bazą MongoDB", err));
 
