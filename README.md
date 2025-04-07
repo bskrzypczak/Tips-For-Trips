@@ -20,7 +20,7 @@
 Poniżej kilka screenów przedstawiających działanie aplikacji:
 
 <p align="center">
-  <img src="screenshots/homepage.jpg" alt="Strona główna" width="600"/>
+  <img src="screenshots/home_page.jpg" alt="Strona główna" width="600"/>
 </p>
 
 <p align="center">
