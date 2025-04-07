@@ -11,7 +11,7 @@
 ✅ Możliwość filtrowania wyników (typy atrakcji, czas trwania, lokalizacja)  
 ✅ Galeria atrakcji z grafikami i opisami  
 🔜 Możliwość zapisania lub wydrukowania planu podróży  
-🔜 Dodanie wyszukiwania hoteli i środków transportu
+🔜 Dodanie wyszukiwania hoteli i środków transportu  
 🔜 Użycie API Google Places
 ---
 
@@ -20,19 +20,19 @@
 Poniżej kilka screenów przedstawiających działanie aplikacji:
 
 <p align="center">
-  <img src="screenshots/homepage.png" alt="Strona główna" width="600"/>
+  <img src="screenshots/homepage.jpg" alt="Strona główna" width="600"/>
 </p>
 
 <p align="center">
-  <img src="screenshots/form.png" alt="Ankieta preferencji" width="600"/>
+  <img src="screenshots/form.jpg" alt="Ankieta preferencji" width="600"/>
 </p>
 
 <p align="center">
-  <img src="screenshots/results.png" alt="Wyniki dopasowania atrakcji" width="600"/>
+  <img src="screenshots/results.jpg" alt="Wyniki dopasowania atrakcji" width="600"/>
 </p>
 
 <p align="center">
-  <img src="screenshots/cities.png" alt="Zakładka miasta" width="600"/>
+  <img src="screenshots/cities.jpg" alt="Zakładka miasta" width="600"/>
 </p>
 
 ---
