@@ -45,16 +45,14 @@ function SearchPage() {
         if (requestSentRef.current) {
             return;
         }
-        
-        const fetchData = async () => {
+          const fetchData = async () => {
             if (!city) {
                 console.error('City is undefined or null');
                 return;
             }
-            
-            const payload = { miasto: city, answers };
+            const payload = { startDate, endDate, miasto: city, answers };
             console.log('Sending payload:', payload);
-            
+
             const matchedActivities = await fetchMatchedActivities(payload);
 
 
@@ -67,7 +65,7 @@ function SearchPage() {
         };
         
         fetchData();
-    }, [city, answers]); // Zależności pozostają takie same
+    }, [startDate, endDate, city, answers]); // Zależności pozostają takie same
 
     return (
         <div className="search-results">
