@@ -1,7 +1,7 @@
 import { SignInButton, UserMenu } from './components/UserMenu';
 import { useUser } from './hooks/UserContext';
 import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom'; // Import Link
+import { Routes, Route, Link } from 'react-router-dom';
 import CitiesTab from './components/CitiesPage';
 import HomeTab from './components/homePage';
 import ActivitiesTab from './components/ActivitiesPage';
@@ -9,6 +9,7 @@ import SearchPage from './components/SearchPage';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style/App.css';
 import './style/CityActivity.css';
+import './style/results.css'
 
 function App() {
     const { user, loading } = useUser();

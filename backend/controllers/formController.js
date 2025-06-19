@@ -294,9 +294,8 @@ const matchAttractions = async (req, res) => {
         const travelMatrix = buildTravelMatrix(toPlan);
 
         const dailyPlans = createDailyPlans(toPlan, travelMatrix, numberOfDays);
-        console.log(JSON.stringify(dailyPlans, null, 2));
+        res.json(dailyPlans)
 
-        res.json(top6);
     } catch (error) {
         console.error("Error matching attractions:", error);
         res.status(500).json({ message: "Internal server error" });

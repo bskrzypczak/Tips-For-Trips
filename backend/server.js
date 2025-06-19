@@ -24,6 +24,7 @@ app.use('/api', cityRoutes);
 // Używamy tras autoryzacji
 app.use('/api/auth', authRoutes);
 
+
 // Prosta trasa testowa
 app.get('/', (req, res) => {
   res.send('Backend is working!');

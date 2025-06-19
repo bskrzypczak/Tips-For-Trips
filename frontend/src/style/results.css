@@ -1,4 +1,5 @@
 .search-results {
+    margin-top: 20px;
     padding: 20px;
     font-family: 'Roboto', sans-serif;
 }
@@ -15,4 +16,101 @@
 
 .search-details strong {
     color: #333;
+}
+
+.day-header {
+  margin-left: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: relative; /* dla pozycji dropdowna */
+  margin-bottom: 20px;
+}
+
+.day-header button {
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.day-header button:hover {
+    background-color: #218838;
+}
+
+.day-header button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.day-title {
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-left: 30px;
+    margin-right: 30px;
+    text-align: center;
+}
+
+.export-button {
+    margin-left: 380px;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.export-button:hover {
+    background-color: #218838;
+}
+
+.export-container {
+  position: relative;
+}
+
+.export-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 100;
+  min-width: 120px;
+}
+
+.export-option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  user-select: none;
+  transition: background-color 0.2s ease;
+
+  margin-bottom: 8px; /* dodany odstęp */
+}
+
+/* Opcjonalnie usunąć odstęp z ostatniego elementu */
+.export-option:last-child {
+  margin-bottom: 0;
+}
+.export-option:hover {
+  background-color: #f0f0f0;
 }

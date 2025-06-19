@@ -2,6 +2,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "jspdf": "^3.0.1",
+    "nodemailer": "^7.0.3",
     "path": "^0.12.7"
   }
 }
