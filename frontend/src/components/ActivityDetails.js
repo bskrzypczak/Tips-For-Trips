@@ -143,7 +143,93 @@ const ActivityDetails = () => {
                 />
             </div>
 
-            {/* Główna sekcja z informacjami i opiniami obok siebie */}
+            {/* Sekcja komentarzy */}
+            <div className="comments-section">
+                <div className="comments-header">
+                    <h3>Opinie ({commentCount})</h3>
+                    {user && (
+                        <button 
+                            onClick={() => setShowCommentForm(!showCommentForm)}
+                            className="btn-add-comment"
+                        >
+                            {showCommentForm ? 'Anuluj' : 'Dodaj opinię'}
+                        </button>
+                    )}
+                    {!user && (
+                        <p className="login-prompt">
+                            <a href="/login">Zaloguj się</a>, aby dodać opinię
+                        </p>
+                    )}
+                </div>
+
+                {showCommentForm && (
+                    <form onSubmit={handleAddComment} className="comment-form">
+                        <div className="form-group">
+                            <label>Ocena:</label>
+                            <div className="rating-input">
+                                {[1, 2, 3, 4, 5].map(star => (
+                                    <button
+                                        key={star}
+                                        type="button"
+                                        className={`star-btn ${star <= newComment.ocena ? 'active' : ''}`}
+                                        onClick={() => setNewComment({...newComment, ocena: star})}
+                                    >
+                                        ★
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label>Komentarz:</label>
+                            <textarea
+                                value={newComment.komentarz}
+                                onChange={(e) => setNewComment({...newComment, komentarz: e.target.value})}
+                                placeholder="Podziel się swoją opinią o tej atrakcji..."
+                                rows="4"
+                                maxLength="1000"
+                                required
+                            />
+                            <small>{newComment.komentarz.length}/1000 znaków</small>
+                        </div>
+                        <button type="submit" disabled={submitting} className="btn-submit">
+                            {submitting ? 'Dodawanie...' : 'Dodaj opinię'}
+                        </button>
+                    </form>
+                )}
+
+                <div className="comments-list">
+                    {comments.length === 0 ? (
+                        <p className="no-comments">Brak opinii dla tej atrakcji</p>
+                    ) : (
+                        comments.map(comment => (
+                            <div key={comment._id} className="comment">
+                                <div className="comment-header">
+                                    <div className="comment-author">
+                                        <strong>{comment.username}</strong>
+                                        {renderStars(comment.ocena)}
+                                    </div>
+                                    <div className="comment-meta">
+                                        <span className="comment-date">
+                                            {new Date(comment.data_utworzenia).toLocaleDateString('pl-PL')}
+                                        </span>
+                                        {(user && ((user.id || user._id) === comment.user_id || user.role === 'admin')) && (
+                                            <button 
+                                                onClick={() => handleDeleteComment(comment._id)}
+                                                className="btn-delete-comment"
+                                                title="Usuń komentarz"
+                                            >
+                                                🗑️
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="comment-text">{comment.komentarz}</p>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+
             <div className="main-content">                {/* Informacje o atrakcji */}
                 <div className="activity-info">
                     <div className="info-section">
@@ -234,93 +320,6 @@ const ActivityDetails = () => {
                             </div>
                         </div>
                     )}
-                </div>
-
-                {/* Sekcja komentarzy obok informacji */}
-                <div className="comments-section">
-                    <div className="comments-header">
-                        <h3>Opinie ({commentCount})</h3>
-                        {user && (
-                            <button 
-                                onClick={() => setShowCommentForm(!showCommentForm)}
-                                className="btn-add-comment"
-                            >
-                                {showCommentForm ? 'Anuluj' : 'Dodaj opinię'}
-                            </button>
-                        )}
-                        {!user && (
-                            <p className="login-prompt">
-                                <a href="/login">Zaloguj się</a>, aby dodać opinię
-                            </p>
-                        )}
-                    </div>
-
-                    {showCommentForm && (
-                        <form onSubmit={handleAddComment} className="comment-form">
-                            <div className="form-group">
-                                <label>Ocena:</label>
-                                <div className="rating-input">
-                                    {[1, 2, 3, 4, 5].map(star => (
-                                        <button
-                                            key={star}
-                                            type="button"
-                                            className={`star-btn ${star <= newComment.ocena ? 'active' : ''}`}
-                                            onClick={() => setNewComment({...newComment, ocena: star})}
-                                        >
-                                            ★
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label>Komentarz:</label>
-                                <textarea
-                                    value={newComment.komentarz}
-                                    onChange={(e) => setNewComment({...newComment, komentarz: e.target.value})}
-                                    placeholder="Podziel się swoją opinią o tej atrakcji..."
-                                    rows="4"
-                                    maxLength="1000"
-                                    required
-                                />
-                                <small>{newComment.komentarz.length}/1000 znaków</small>
-                            </div>
-                            <button type="submit" disabled={submitting} className="btn-submit">
-                                {submitting ? 'Dodawanie...' : 'Dodaj opinię'}
-                            </button>
-                        </form>
-                    )}
-
-                    <div className="comments-list">
-                        {comments.length === 0 ? (
-                            <p className="no-comments">Brak opinii dla tej atrakcji</p>
-                        ) : (
-                            comments.map(comment => (
-                                <div key={comment._id} className="comment">
-                                    <div className="comment-header">
-                                        <div className="comment-author">
-                                            <strong>{comment.username}</strong>
-                                            {renderStars(comment.ocena)}
-                                        </div>
-                                        <div className="comment-meta">
-                                            <span className="comment-date">
-                                                {new Date(comment.data_utworzenia).toLocaleDateString('pl-PL')}
-                                            </span>
-                                            {(user && (user.id === comment.user_id || user.role === 'admin')) && (
-                                                <button 
-                                                    onClick={() => handleDeleteComment(comment._id)}
-                                                    className="btn-delete-comment"
-                                                    title="Usuń komentarz"
-                                                >
-                                                    🗑️
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <p className="comment-text">{comment.komentarz}</p>
-                                </div>
-                            ))
-                        )}
-                    </div>
                 </div>
             </div>
         </div>

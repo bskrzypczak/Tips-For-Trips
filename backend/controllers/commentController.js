@@ -27,8 +27,8 @@ const addComment = async (req, res) => {
     try {
         const { id_atrakcji } = req.params;
         const { komentarz, ocena } = req.body;
-        const user_id = req.user.id;
-        const username = req.user.username;
+        const user_id = req.user.id || req.user._id;
+        const username = `${req.user.firstName} ${req.user.lastName}`;
 
         // Sprawdź czy atrakcja istnieje
         const activity = await Activity.findOne({ id_atrakcji: parseInt(id_atrakcji) });
@@ -80,7 +80,7 @@ const addComment = async (req, res) => {
 const deleteComment = async (req, res) => {
     try {
         const { commentId } = req.params;
-        const user_id = req.user.id;
+        const user_id = req.user.id || req.user._id;
         const userRole = req.user.role;
 
         const comment = await Comment.findById(commentId);
@@ -89,10 +89,8 @@ const deleteComment = async (req, res) => {
                 success: false,
                 message: 'Komentarz nie został znaleziony'
             });
-        }
-
-        // Sprawdź czy użytkownik może usunąć komentarz (autor lub admin)
-        if (comment.user_id.toString() !== user_id && userRole !== 'admin') {
+        }        // Sprawdź czy użytkownik może usunąć komentarz (autor lub admin)
+        if (comment.user_id.toString() !== user_id.toString() && userRole !== 'admin') {
             return res.status(403).json({
                 success: false,
                 message: 'Nie masz uprawnień do usunięcia tego komentarza'
