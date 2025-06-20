@@ -4,6 +4,7 @@ const path = require('path');
 const cityRoutes = require('./routes/cityRoutes');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
@@ -27,6 +28,9 @@ app.use('/api/auth', authRoutes);
 
 // Używamy tras administratora
 app.use('/api/admin', adminRoutes);
+
+// Używamy tras komentarzy
+app.use('/api', commentRoutes);
 
 
 // Prosta trasa testowa

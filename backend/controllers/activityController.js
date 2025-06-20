@@ -47,4 +47,29 @@ const getActivitiesInCity = async (req, res) => {
     }
 };
 
-module.exports = {getActivities, getActivitiesInCity};
+const getActivityById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const activity = await Activity.findOne({ id_atrakcji: parseInt(id) }, { _id: 0 });
+        
+        if (!activity) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Atrakcja nie została znaleziona' 
+            });
+        }
+
+        res.json({
+            success: true,
+            activity
+        });
+    } catch (err) {
+        console.error('Błąd pobierania atrakcji:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Błąd pobierania atrakcji'
+        });
+    }
+};
+
+module.exports = {getActivities, getActivitiesInCity, getActivityById};

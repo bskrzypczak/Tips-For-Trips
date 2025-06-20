@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 
 function SearchPage() {
@@ -205,10 +205,13 @@ function SearchPage() {
                         )}
                     </div>
                 </div>
-                <div className="positions-list">
-                    {currentDay &&
+                <div className="positions-list">                    {currentDay &&
                         currentDay.activities.map((activity, index) => (
-                            <div key={index} className="position-tile">
+                            <Link 
+                                key={index} 
+                                to={`/activity/${activity.id_atrakcji}`}
+                                className="position-tile"
+                            >
                                 <img
                                     src={`/activities/${activity.id_atrakcji}.jpg`}
                                     alt={activity.nazwa_atrakcji}
@@ -217,7 +220,7 @@ function SearchPage() {
                                 <div className="act-tile-text">
                                     <strong>{activity.startTime}</strong> — {activity.nazwa_atrakcji}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                 </div>
             </section>

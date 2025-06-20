@@ -34,11 +34,16 @@
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
   }
   
   .position-tile:hover {
     transform: scale(1.05); /* Powiększenie na hover */
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    color: inherit;
 }
   
   .act-tile-image {

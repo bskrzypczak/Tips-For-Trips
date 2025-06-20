@@ -11,6 +11,7 @@ router.get('/cities/:cityName', cityController.getCityDetails);
 router.get('/cities/:cityName/activities', activityController.getActivitiesInCity);
 
 router.get('/activities', activityController.getActivities);
+router.get('/activities/:id', activityController.getActivityById);
 router.post('/match', formController.matchAttractions);
 router.get('/cities', cityController.getCities);
 

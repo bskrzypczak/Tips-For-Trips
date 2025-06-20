@@ -238,12 +238,14 @@
 }
 
 .search-input {
-    flex: 1;
+    flex: 2;
     min-width: 300px;
 }
 
-.filter-select {
-    min-width: 180px;
+.filter-select,
+.role-filter {
+    flex: 1;
+    min-width: 200px;
 }
 
 /* Zarządzanie użytkownikami - specyficzne style */
@@ -1112,18 +1114,11 @@ zform-group textarea.error {
 
 /* Zarządzanie atrakcjami - dodatkowe style dla komponentu */
 .management-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 30px;
-    padding: 20px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .management-header h2 {
-    margin: 0;
+    margin: 0 0 20px 0;
     color: #495057;
     font-size: 1.8rem;
     font-weight: 700;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function ActivitiesTab() {
     const [activities, setActivities] = useState([]);
@@ -133,10 +134,9 @@ function ActivitiesTab() {
 
 			{currentItems.length > 0 && (
                 <section className="positions-section">
-                    <h1 className="positions-title">Popularne atrakcje</h1>
-                    <div className="positions-list">
+                    <h1 className="positions-title">Popularne atrakcje</h1>                    <div className="positions-list">
                         {currentItems.map((activity, index) => (
-                            <div key={index} className="position-tile">
+                            <Link key={index} to={`/activity/${activity.id_atrakcji}`} className="position-tile">
                                 <img
                                     src={`/activities/${activity.id_atrakcji}.jpg`}
                                     alt={`${activity.nazwa_atrakcji}`}
@@ -145,7 +145,7 @@ function ActivitiesTab() {
                                 <div className="act-tile-text">
                                     {activity.nazwa_atrakcji}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </section>

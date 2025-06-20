@@ -7,6 +7,7 @@ import HomeTab from './components/homePage';
 import ActivitiesTab from './components/ActivitiesPage';
 import SearchPage from './components/SearchPage';
 import AdminPanel from './components/AdminPanel';
+import ActivityDetails from './components/ActivityDetails';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style/App.css';
 import './style/CityActivity.css';
@@ -58,9 +59,9 @@ function App() {
                                 setDateRange={setDateRange}
                             />
                         }
-                    />
-                    <Route path="/cities" element={<CitiesTab />} />
+                    />                    <Route path="/cities" element={<CitiesTab />} />
                     <Route path="/activities" element={<ActivitiesTab />} />
+                    <Route path="/activity/:id" element={<ActivityDetails />} />
                     <Route path="/search" element={<SearchPage />} />
                     {user && user.role === 'admin' && (
                         <Route path="/admin" element={<AdminPanel />} />
