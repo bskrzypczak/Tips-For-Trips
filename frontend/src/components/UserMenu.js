@@ -22,10 +22,6 @@ export function UserMenu() {
 
   if (!user) return null;
 
-  // Debugging - sprawdź co jest w obiekcie user
-  console.log('UserMenu - user object:', user);
-  console.log('UserMenu - user.role:', user.role);
-
   const handleToggle = () => {
     setShowSignOut(!showSignOut);
   };
