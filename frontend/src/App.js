@@ -6,10 +6,12 @@ import CitiesTab from './components/CitiesPage';
 import HomeTab from './components/homePage';
 import ActivitiesTab from './components/ActivitiesPage';
 import SearchPage from './components/SearchPage';
+import AdminPanel from './components/AdminPanel';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style/App.css';
 import './style/CityActivity.css';
 import './style/results.css'
+import './style/AdminPanel.css'
 
 function App() {
     const { user, loading } = useUser();
@@ -36,8 +38,7 @@ function App() {
             <header className="app-header">
                 <Link to="/">
                     <img src="/logo.png" alt="Logo" className="app-logo" />
-                </Link>
-                <nav className="app-nav">
+                </Link>                <nav className="app-nav">
                     <Link to="/">Strona główna</Link>
                     <Link to="/cities">Miasta</Link>
                     <Link to="/activities">Atrakcje</Link>
@@ -47,8 +48,7 @@ function App() {
                     {user ? <UserMenu /> : <SignInButton />}
                 </div>
             </header>
-            <main className="app-main">
-                <Routes>
+            <main className="app-main">                <Routes>
                     <Route
                         path="/"
                         element={
@@ -62,6 +62,9 @@ function App() {
                     <Route path="/cities" element={<CitiesTab />} />
                     <Route path="/activities" element={<ActivitiesTab />} />
                     <Route path="/search" element={<SearchPage />} />
+                    {user && user.role === 'admin' && (
+                        <Route path="/admin" element={<AdminPanel />} />
+                    )}
                 </Routes>
             </main>
             <footer className="app-footer">

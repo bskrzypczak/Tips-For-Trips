@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../hooks/UserContext';
 import AuthModal from './AuthModal';
 
@@ -20,6 +21,10 @@ export function UserMenu() {
   const [showSignOut, setShowSignOut] = useState(false);
 
   if (!user) return null;
+
+  // Debugging - sprawdź co jest w obiekcie user
+  console.log('UserMenu - user object:', user);
+  console.log('UserMenu - user.role:', user.role);
 
   const handleToggle = () => {
     setShowSignOut(!showSignOut);
@@ -70,6 +75,11 @@ export function UserMenu() {
             padding: '8px'
           }}
         >
+          {user.role === 'admin' && (
+            <Link to="/admin" className="admin-panel-btn" onClick={() => setShowSignOut(false)}>
+              Panel Administratora
+            </Link>
+          )}
           <button onClick={handleSignOut} className="sign-out-btn">
             Wyloguj się
           </button>
@@ -78,5 +88,3 @@ export function UserMenu() {
     </div>
   );
 }
-
-

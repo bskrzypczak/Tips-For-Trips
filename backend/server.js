@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const cityRoutes = require('./routes/cityRoutes');
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
@@ -23,6 +24,9 @@ app.use('/api', cityRoutes);
 
 // Używamy tras autoryzacji
 app.use('/api/auth', authRoutes);
+
+// Używamy tras administratora
+app.use('/api/admin', adminRoutes);
 
 
 // Prosta trasa testowa

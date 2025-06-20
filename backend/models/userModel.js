@@ -18,11 +18,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-    lastName: {
+    },    lastName: {
         type: String,
         required: true,
         trim: true
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     },
     avatar: {
         type: String,
@@ -65,6 +69,7 @@ userSchema.methods.toPublicJSON = function() {
         email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,
+        role: this.role,
         avatar: this.avatar,
         isVerified: this.isVerified,
         createdAt: this.createdAt,
