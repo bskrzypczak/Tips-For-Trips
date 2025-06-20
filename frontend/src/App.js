@@ -62,7 +62,6 @@ function App() {
                     <Route path="/cities" element={<CitiesTab />} />
                     <Route path="/activities" element={<ActivitiesTab />} />
                     <Route path="/search" element={<SearchPage />} />
-                    {/* Możesz dodać więcej tras, np. dla kontaktu */}
                 </Routes>
             </main>
             <footer className="app-footer">
