@@ -66,7 +66,6 @@ function UserManagement() {
     return (
         <div className="user-management">
             <div className="management-header">
-                <h2>Zarządzanie Użytkownikami</h2>
                 <div className="filters">
                     <input
                         type="text"
